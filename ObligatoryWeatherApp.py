@@ -37,10 +37,7 @@ url = "https://api.weather.gov/points/"+str(a)+","+str(b)
 response  = requests.get(url)
 json_object = response.json()
 jsonFormatted = json.dumps(json_object, indent=2)
-#print(jsonFormatted)
 
-#print("")
-#print(json_object["properties"]["forecast"])
 
 url = json_object["properties"]["forecast"]
 
@@ -58,13 +55,6 @@ for i in json_object["properties"]["periods"]:
     #print(f"forcastList is: {forecastList}")
 
 
-#print(forecastList)
-
-##
-##for i in range(15):
-##    url = "https://api.weather.gov/icons/land/night/tsra_hi,20/few?size=medium"
-##    response = requests.get(url)
-##    img = (response.content)
 
 
 
@@ -74,22 +64,29 @@ print(forecastList[0][2])
 
 layout = []
 column = []
-layout.append( [sg.Text("Title",key="title", font = "cambria 30", text_color = "Blue")])
+layout.append( [sg.Text("Obligatory Weather API App",key="title", font = "cambria 30", text_color = "Blue")])
+frame_layout =[]
+for i in range(0,14):
+    frame_layout += [
+        [
+                  [sg.Text("a",size = (12,25),font = "cambria 12",key=f"textBox{i}")],
+                  [sg.Image(data = "", key=f"image{i}")]
+           ]       
+               ]
 
 
+layout+= [  [sg.Frame(forecastList[i][0], frame_layout[i], font='Any 12', title_color='blue')for i in range(0,14)]]  
 
-column1 = [ [sg.Text("aaaaaaaaaaaaaaaaaaaaaaaaa",key=f"textBox{i}",font = "cambria 8") for i in range (0,14)]  ]
-
-column2=[  [sg.Image(data = "", key=f"image{i}") for i in range (0,14)]  ]
+##column2=[    ]
 
 
-layout+=column1
-layout+=column2
+#layout+=column1
+#layout+=column2
 
 window = sg.Window("a",layout,finalize = True,grab_anywhere=True)
 
 for i in range (0,14):
-    window[f"textBox{i}"].Update(forecastList[i][0]+": \n"+forecastList[i][1]+"\n\n")
+    window[f"textBox{i}"].Update(forecastList[i][1])
     print(forecastList[i][0])
     url = forecastList[i][2]
     #print(forecastList[i][2])
