@@ -15,7 +15,7 @@ for i in city_name:
     else:
         myString+=i
 
-print(myString)
+#print(myString)
 
 complete_url = url + myString+ "&key=" + gapi
 
@@ -39,8 +39,8 @@ json_object = response.json()
 jsonFormatted = json.dumps(json_object, indent=2)
 #print(jsonFormatted)
 
-print("")
-print(json_object["properties"]["forecast"])
+#print("")
+#print(json_object["properties"]["forecast"])
 
 url = json_object["properties"]["forecast"]
 
@@ -48,36 +48,54 @@ response = requests.get(url)
 json_object = response.json()
 
 jsonFormatted = json.dumps(json_object, indent=2)
-print(jsonFormatted)
+#print(jsonFormatted)
 
 forecastList = []
+num = 0
 for i in json_object["properties"]["periods"]:
-    print(i['name']+": \n"+i["detailedForecast"]+"\n\n")
+    #print(i['name']+": \n"+i["detailedForecast"]+"\n\n")
     forecastList.append( (i['name'],i["detailedForecast"],i["icon"]))
+    #print(f"forcastList is: {forecastList}")
+
 
 #print(forecastList)
 
-url = "https://api.weather.gov/icons/land/night/tsra_hi,20/few?size=medium"
-response = requests.get(url)
-img = (response.content)
+##
+##for i in range(15):
+##    url = "https://api.weather.gov/icons/land/night/tsra_hi,20/few?size=medium"
+##    response = requests.get(url)
+##    img = (response.content)
 
 
 
 
 
-
+print(forecastList[0][2])
 
 layout = []
-layout.append( [sg.Text("Title",key="title", font = "cambria, 40", text_color = "Blue")])
-for i in range(14):
-    layout+=[ [sg.Text("",key=f"textBox{[i]}")], [sg.Image(data = img, key=f"image{i}", size = (40,40)),]]
+column = []
+layout.append( [sg.Text("Title",key="title", font = "cambria 30", text_color = "Blue")])
+
+
+
+column1 = [ [sg.Text("aaaaaaaaaaaaaaaaaaaaaaaaa",key=f"textBox{i}",font = "cambria 8") for i in range (0,14)]  ]
+
+column2=[  [sg.Image(data = "", key=f"image{i}") for i in range (0,14)]  ]
+
+
+layout+=column1
+layout+=column2
 
 window = sg.Window("a",layout,finalize = True,grab_anywhere=True)
-window.read()
 
-for i in range (len(forecastList)):
-    window.Update[f"textBox{[i]}"](i['name']+": \n"+i["detailedForecast"]+"\n\n")
-    window.Update[f"image{i}"](f"image{i}")
+for i in range (0,14):
+    window[f"textBox{i}"].Update(forecastList[i][0]+": \n"+forecastList[i][1]+"\n\n")
+    print(forecastList[i][0])
+    url = forecastList[i][2]
+    #print(forecastList[i][2])
+    response = requests.get(url)
+    img = (response.content)
+    window[f"image{i}"].Update(data=img)
                                
 
 
